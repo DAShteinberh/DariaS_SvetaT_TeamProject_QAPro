@@ -13,30 +13,40 @@ let buttonSubmit = document.getElementById("payFine");
 
 //Ця зміна містить всі дані які в нас зберігаються у файлі data
 let DB = data.finesData;
+var searchFineNumber =  DB.find(item => item.номер == fineNumber.value);
+var searchAmount =  DB.find(item => item.сума == amount.value);
 
-function finePayments() {
-    let fineNumberValue = fineNumber.value;
-    let passportValue = passport.value;
-    let creditCardNumberValue = creditCardNumber.value;
-    let cvvValue = cvv.value;
-    let amountValue = amount.value;
+buttonSubmit.addEventListener('click',payFine);
 
-    if (fineNumberValue !== DB.fineNumber || amountValue !== DB.amount) {
-        alert("Номер або Сума не співпадає");
-    } else if (!/^[А-ЩЬЮЯҐЄІЇ]{2}\d{6}$|^\d{9}$/g.test(passportValue)) {
-        alert("Не вірний паспортний номер");
-    } else if (!/^[4-6]+\d{15}$/g.test(creditCardNumberValue)) {
-        alert("IНе вірна кредитна картка");
-    } else if (!/^\d{3}$/g.test(cvvValue)) {
-        alert("Не вірний cvv");
+function payFine() {
+
+    var regPassport = /^[А-ЩЬЮЯҐЄІЇ]{2}\d{6}$|^\d{9}$/g;
+    var regCard = /^[4-6]+\d{15}$/g;
+    var regCVV = /^\d{3}$/g;
+
+
+    if (fineNumber.value !== searchFineNumber.номер) {
+         alert("Номер штрафу не співпадає");
+        // console.log(searchFineNumber)
+    } else if (!regPassport.test(passport.value)) {
+        alert ("Не вірні паспортні дані");
+    } else if (!regCard.test(creditCardNumber.value)) {
+         alert ("Не вірний номер кредитної картки");
+    } else if (!regCVV.test(cvv.value)) {
+         alert ("Не вірний cvv");
+    } else if (amount.value !== searchAmount.сума) {
+            alert("Сума штрафу не співпадає");
+                console.log(searchAmount)
     } else {
-        buttonSubmit.addEventListener('click',payFine);
-        function payFine(){
-        alert("Штраф сплачено");
+        for (let i = DB.length; i--; ) {
+            if (DB[i].номер === fineNumber & DB[i].amount === amount) {
+              DB.splice(i, 1);
         }
-        delete DB.finesData;
-    }
-}
+      } 
+    };
+};
+
+
 
 /**
 Вам необхідно реалізувати наступний функціонал.
