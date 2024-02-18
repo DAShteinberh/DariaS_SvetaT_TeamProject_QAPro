@@ -14,6 +14,29 @@ let buttonSubmit = document.getElementById("payFine");
 //Ця зміна містить всі дані які в нас зберігаються у файлі data
 let DB = data.finesData;
 
+function finePayments() {
+    let fineNumberValue = fineNumber.value;
+    let passportValue = passport.value;
+    let creditCardNumberValue = creditCardNumber.value;
+    let cvvValue = cvv.value;
+    let amountValue = amount.value;
+
+    if (fineNumberValue !== DB.fineNumber || amountValue !== DB.amount) {
+        alert("Номер або Сума не співпадає");
+    } else if (!/^[А-ЩЬЮЯҐЄІЇ]{2}\d{6}$|^\d{9}$/g.test(passportValue)) {
+        alert("Не вірний паспортний номер");
+    } else if (!/^[4-6]+\d{15}$/g.test(creditCardNumberValue)) {
+        alert("IНе вірна кредитна картка");
+    } else if (!/^\d{3}$/g.test(cvvValue)) {
+        alert("Не вірний cvv");
+    } else {
+        buttonSubmit.addEventListener('click',payFine);
+        function payFine(){
+        alert("Штраф сплачено");
+        }
+        delete DB.finesData;
+    }
+}
 
 /**
 Вам необхідно реалізувати наступний функціонал.
@@ -32,7 +55,3 @@ alert "Номер не співпадає" або "Сума не співпад�
 Якщо валідація проходить успішно, то виконати оплату,
  тобто вам потрібно видалити обєкт з DB
  */
-buttonSubmit.addEventListener('click',payFine);
-function payFine(){
-
-}
